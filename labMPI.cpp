@@ -162,3 +162,121 @@ int main(int argc, char** argv)
 
 	return 0;
 }
+
+
+//3
+
+
+//#include <iostream>
+//#include <cstdlib>
+//#include "mpi.h"
+//
+//int main(int argc, char** argv)
+//{
+//	srand(time(NULL));
+//	MPI_Init(&argc, &argv);
+//	MPI_Status status;
+//
+//	int rank, size;
+//	MPI_Comm_size(MPI_COMM_WORLD, &size);
+//	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+//
+//	double startTime = MPI_Wtime();
+//
+//	int K = atoi(argv[1]);
+//	int L = atoi(argv[2]);
+//	int M = atoi(argv[3]);
+//
+//	int whole = K / size;
+//	int remainder = K % size;
+//	int local_k = (rank < remainder) ? (whole + 1) : whole;
+//	int local_l = (rank < remainder) ? (whole + 1) : whole;
+//	double* a = new double[K * L];
+//	double* b = new double[L * M];
+//	double* c = new double[K * M];
+//	double* local_a = new double[local_k * L];
+//	double* local_c = new double[local_k * M];
+//
+//	if (rank == 0) {
+//		for (int i = 0; i < K * L; i++)
+//		{
+//			a[i] = rand() % 2 - 1;
+//		}
+//		for (int i = 0; i < L * M; i++)
+//		{
+//			b[i] = rand() % 2 - 1;
+//		}
+//	}
+//
+//	MPI_Bcast(b, L * M, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+//
+//	int sum = 0;
+//	int* sendcounts = new int[size];
+//	int* displs = new int[size];
+//
+//	for (int i = 0; i < size; i++)
+//	{
+//		sendcounts[i] = ((i < remainder) ? (whole + 1) : whole) * L;
+//		displs[i] = sum;
+//		sum += sendcounts[i];
+//	}
+//
+//	MPI_Scatterv(a, sendcounts, displs, MPI_DOUBLE, local_a, local_k * L, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+//
+//	for (int i = 0; i < local_k; ++i) {
+//		for (int j = 0; j < M; ++j) {
+//			local_c[i * M + j] = 0;
+//			for (int k = 0; k < L; ++k) {
+//				local_c[i * M + j] += local_a[i * L + k] * b[k * M + j];
+//			}
+//		}
+//	}
+//
+//	sum = 0;
+//	for (int i = 0; i < size; i++)
+//	{
+//		sendcounts[i] = ((i < remainder) ? (whole + 1) : whole) * M;
+//		displs[i] = sum;
+//		sum += sendcounts[i];
+//	}
+//
+//	MPI_Gatherv(local_c, local_k * M, MPI_DOUBLE, c, sendcounts, displs, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+//
+//	if (rank == 0) {
+//		std::cout << "Matrix a:" << std::endl;
+//		for (int i = 0; i < K * L; i++)
+//		{
+//			std::cout << a[i] << " ";
+//			if ((i + 1) % L == 0) {
+//				std::cout << std::endl;
+//			}
+//		}
+//		std::cout << "Matrix b:" << std::endl;
+//		for (int i = 0; i < L * M; i++)
+//		{
+//			std::cout << b[i] << " ";
+//			if ((i + 1) % M == 0) {
+//				std::cout << std::endl;
+//			}
+//		}
+//		std::cout << "Matrix a * b:" << std::endl;
+//		for (int i = 0; i < K * M; i++)
+//		{
+//			std::cout << c[i] << " ";
+//			if ((i + 1) % M == 0) {
+//				std::cout << std::endl;
+//			}
+//		}
+//	}
+//	double endTime = MPI_Wtime();
+//
+//	double time = endTime - startTime;
+//
+//	if (rank == 0) {
+//		std::cout << "Start time: " << startTime << std::endl;
+//		std::cout << "Finish time: " << endTime << std::endl;
+//		std::cout << "Time: " << time << std::endl;
+//	}
+//	MPI_Finalize();
+//	return 0;
+//}
